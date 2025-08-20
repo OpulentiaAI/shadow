@@ -9,6 +9,11 @@ import { UserMessage } from "./user-message";
 import InitializingAnimation from "../../task/initializing-animation";
 import { useMemo, memo, useRef } from "react";
 import { StackedPRCard } from "./stacked-pr-card";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
 
 function groupMessages(messages: Message[]) {
   const messageGroups: Message[][] = [];
@@ -73,13 +78,14 @@ function MessagesComponent({
   const messageGroups = useMemo(() => groupMessages(messages), [messages]);
 
   return (
-    <div className="relative z-0 mb-24 flex w-full grow flex-col gap-6">
-      <InitializingAnimation
-        taskId={taskId}
-        userMessageWrapperRef={userMessageWrapperRef}
-      />
+    <Conversation className="relative z-0">
+      <ConversationContent className="mb-24 flex w-full grow flex-col gap-6">
+        <InitializingAnimation
+          taskId={taskId}
+          userMessageWrapperRef={userMessageWrapperRef}
+        />
 
-      {messageGroups.map((messageGroup, groupIndex) => {
+        {messageGroups.map((messageGroup, groupIndex) => {
         const isLastGroup = groupIndex === messageGroups.length - 1;
         const lastMessage = messageGroup[messageGroup.length - 1];
         const endsWithUserMessage = lastMessage && isUserMessage(lastMessage);
@@ -155,7 +161,9 @@ function MessagesComponent({
           </div>
         );
       })}
-    </div>
+      </ConversationContent>
+      <ConversationScrollButton />
+    </Conversation>
   );
 }
 
